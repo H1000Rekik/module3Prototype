@@ -1,0 +1,161 @@
+<div class="arena-layout">
+
+  <!-- LEFT: Problem Panel -->
+  <aside class="problem-panel">
+    <div class="problem-header">
+      <span class="problem-tag">Easy</span>
+      <span class="problem-tag tag-array">Array</span>
+      <span class="problem-tag tag-hash">Hash Table</span>
+    </div>
+    <h1 class="problem-title">1. Two Sum</h1>
+    <div class="problem-body">
+      <p>Given an array of integers <code>nums</code> and an integer <code>target</code>, return
+        <em>indices of the two numbers such that they add up to target</em>.</p>
+      <p>You may assume that each input would have <strong>exactly one solution</strong>,
+        and you may not use the same element twice.</p>
+      <p>Return the answer in <strong>any order</strong>.</p>
+
+      <div class="example-block">
+        <div class="example-label">Example 1</div>
+        <div class="example-line"><span class="ex-key">Input:</span> <code>nums = [2,7,11,15], target = 9</code></div>
+        <div class="example-line"><span class="ex-key">Output:</span> <code>[0,1]</code></div>
+        <div class="example-line"><span class="ex-key">Explanation:</span> nums[0] + nums[1] == 9</div>
+      </div>
+
+      <div class="example-block">
+        <div class="example-label">Example 2</div>
+        <div class="example-line"><span class="ex-key">Input:</span> <code>nums = [3,2,4], target = 6</code></div>
+        <div class="example-line"><span class="ex-key">Output:</span> <code>[1,2]</code></div>
+      </div>
+
+      <div class="constraints-block">
+        <div class="constraints-label">Constraints</div>
+        <ul>
+          <li><code>2 ≤ nums.length ≤ 10⁴</code></li>
+          <li><code>-10⁹ ≤ nums[i] ≤ 10⁹</code></li>
+          <li><code>-10⁹ ≤ target ≤ 10⁹</code></li>
+        </ul>
+      </div>
+
+      <div class="note-block">
+        <strong>Input format (stdin):</strong> Line 1: space-separated integers. Line 2: target.<br>
+        <strong>Your function:</strong> <code>def solve(nums: list, target: int) -> list</code>
+      </div>
+    </div>
+  </aside>
+
+  <!-- RIGHT: Editor + Output Panel -->
+  <main class="editor-panel">
+
+    <!-- Editor Header -->
+    <div class="editor-header">
+      <div class="lang-badge">
+        <span class="lang-dot"></span>
+        Python 3
+      </div>
+      <div class="user-field">
+        <label>Player</label>
+        <input [(ngModel)]="username" placeholder="username" />
+      </div>
+      <div class="actions">
+        <button class="btn btn-run" (click)="run()" [disabled]="isRunning">
+          <span *ngIf="!isRunning">▶ Run</span>
+          <span *ngIf="isRunning" class="spinner"></span>
+        </button>
+        <button class="btn btn-submit" (click)="submitCode()" [disabled]="isRunning">
+          <span *ngIf="!isRunning">Submit</span>
+          <span *ngIf="isRunning" class="spinner"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Code Textarea -->
+    <div class="code-wrapper">
+      <textarea
+        class="code-editor"
+        [(ngModel)]="code"
+        spellcheck="false"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+      ></textarea>
+    </div>
+
+    <!-- Bottom Tabs -->
+    <div class="output-panel">
+      <div class="tab-bar">
+        <button class="tab" [class.active]="activeTab === 'result'" (click)="activeTab = 'result'">Result</button>
+        <button class="tab" [class.active]="activeTab === 'history'" (click)="activeTab = 'history'; loadHistory()">History</button>
+      </div>
+
+      <!-- Result Tab -->
+      <div class="tab-content" *ngIf="activeTab === 'result'">
+
+        <div *ngIf="currentStatus === 'idle'" class="idle-msg">
+          Press <strong>Run</strong> to test on sample cases, or <strong>Submit</strong> to judge all tests.
+        </div>
+
+        <div *ngIf="currentStatus === 'pending' || currentStatus === 'processing'" class="processing-msg">
+          <div class="pulse-ring"></div>
+          <span>{{ currentStatus === 'pending' ? 'Queuing submission...' : 'Running test cases...' }}</span>
+        </div>
+
+        <div *ngIf="currentStatus === 'done' && result" class="result-block">
+          <div class="verdict-banner" [ngClass]="getVerdictClass(result.verdict)">
+            {{ result.verdict }}
+          </div>
+          <div class="result-meta">
+            <div class="meta-item">
+              <span class="meta-label">Runtime</span>
+              <span class="meta-value">{{ formatTime(result.runtime) }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Memory</span>
+              <span class="meta-value">{{ formatMemory(result.memory) }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Mode</span>
+              <span class="meta-value">{{ result.mode }}</span>
+            </div>
+          </div>
+          <div class="output-box" *ngIf="result.output">
+            <div class="output-label">Test Output</div>
+            <pre>{{ result.output }}</pre>
+          </div>
+          <div class="output-box error-box" *ngIf="result.errorOutput">
+            <div class="output-label">Error</div>
+            <pre>{{ result.errorOutput }}</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- History Tab -->
+      <div class="tab-content" *ngIf="activeTab === 'history'">
+        <div *ngIf="history.length === 0" class="idle-msg">No submissions yet.</div>
+        <table class="history-table" *ngIf="history.length > 0">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Mode</th>
+              <th>Verdict</th>
+              <th>Runtime</th>
+              <th>Memory</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of history">
+              <td>{{ s.id }}</td>
+              <td>{{ s.mode }}</td>
+              <td [ngClass]="getVerdictClass(s.verdict)">{{ s.verdict || s.status }}</td>
+              <td>{{ formatTime(s.runtime) }}</td>
+              <td>{{ formatMemory(s.memory) }}</td>
+              <td>{{ s.submittedAt | date:'HH:mm:ss' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+</div>

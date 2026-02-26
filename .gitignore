@@ -1,0 +1,40 @@
+# ===========================
+# Spring Boot / Java / Maven
+# ===========================
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+.mvn/
+!.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+
+# ===========================
+# Angular / Node
+# ===========================
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+yarn-error.log*
+
+# ===========================
+# IDE
+# ===========================
+.idea/
+*.iml
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ===========================
+# OS
+# ===========================
+.DS_Store
+Thumbs.db
+desktop.ini
