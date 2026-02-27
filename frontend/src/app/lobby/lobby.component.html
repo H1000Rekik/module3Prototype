@@ -1,0 +1,10 @@
+<div class="lobby-container">
+    <h2>Welcome, {{ username }}</h2>
+    <div class="actions">
+        <button (click)="createRoom()">Create New Match</button>
+        <div class="join-section">
+            <input type="text" [(ngModel)]="joinRoomId" placeholder="Room ID" />
+            <button (click)="joinRoom()">Join Match</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+<div class="match-container" *ngIf="room">
+    <h2>Room: {{ room.roomId }}</h2>
+    <div class="status-bar">
+        <span>Status: <strong>{{ room.status }}</strong></span>
+        <span *ngIf="room.status === 'CODING'" class="timer">Time Remaining: {{ formattedTime }}</span>
+    </div>
+
+    <div class="players">
+        <div class="player player1">
+            P1: {{ room.player1?.username }} (ELO: {{ room.player1?.eloRating }})
+        </div>
+        <div class="vs">
+            <h2>VS</h2>
+        </div>
+        <div class="player player2">
+            P2: {{ room.player2?.username || 'Waiting...' }} (ELO: {{ room.player2?.eloRating || '?' }})
+        </div>
+    </div>
+
+    <hr />
+
+    <!-- LEAGUE OF LEGENDS MOD: BAN PHASE -->
+    <div *ngIf="room.status === 'BAN_PHASE'" class="ban-phase">
+        <h3>League of Legends Mod: Ban Phase</h3>
+        <p>Both players can ban a programming language before starting.</p>
+        <div class="ban-actions">
+            <input type="text" [(ngModel)]="banInput" placeholder="Language to ban e.g., java, python" />
+            <button (click)="sendBan()">Ban & Ready</button>
+        </div>
+        <div *ngIf="room.bannedLanguages.length > 0">
+            <p>Currently Banned: {{ room.bannedLanguages.join(', ') }}</p>
+        </div>
+    </div>
+
+    <!-- CODING PHASE with Chess Logic -->
+    <div *ngIf="room.status === 'CODING'" class="coding-phase">
+        <h3>Problem:</h3>
+        <p>{{ room.problemStatement }}</p>
+        <div class="banned-info" *ngIf="room.bannedLanguages.length > 0">
+            <strong>Banned Languages:</strong> {{ room.bannedLanguages.join(', ') }}
+        </div>
+
+        <textarea [(ngModel)]="code" placeholder="Write your solution here..." rows="10" cols="50"></textarea>
+        <div class="actions">
+            <button (click)="submitCode(false)">Test Run (Mock Fail)</button>
+            <button (click)="submitCode(true)">Submit Code (Mock Success)</button>
+        </div>
+    </div>
+
+    <!-- FINISHED -->
+    <div *ngIf="room.status === 'FINISHED'" class="finished-phase">
+        <h3>Match Finished!</h3>
+        <p>Winner: <strong>{{ room.winner?.username }}</strong></p>
+        <p>Your new ELO will be reflected in your profile.</p>
+        <button routerLink="/lobby">Back to Lobby</button>
+    </div>
+</div>
+
+<div *ngIf="!room">
+    <p>Loading or connecting to room...</p>
+</div>
